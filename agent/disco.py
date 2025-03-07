@@ -349,7 +349,7 @@ class DISCOAgent(SACAgent):
 
         top_10_idx = np.argsort(mean_distance)[-1:]
         
-        counts = np.bincount((top_10_idx/(self.num_eval_each_skill * diffuse_timestep)).astype(np.int))
+        counts = np.bincount((top_10_idx/(self.num_eval_each_skill * diffuse_timestep)).astype(int))
         guide_skill_idx = np.argmax(counts)
         
         guide_skill = meta_all['skill'][guide_skill_idx]
@@ -361,7 +361,7 @@ class DISCOAgent(SACAgent):
                         observations = observations,
                         all_samples= all_samples,
                         save_dir = save_dir,
-                        use_wandb = True,
+                        use_wandb = self.use_wandb,
                         skill_dim = self.skill_dim)
         
         return guide_skill, trajectory
@@ -384,7 +384,7 @@ class DISCOAgent(SACAgent):
             self.extended_step = step
             self.guide_skill, trajectory = self.find_guide(env, step)
             save_dir = self.save_dir + '/guide_{}.png'.format(step)
-            self.plot(env = env, trajectory = trajectory, save_dir = save_dir, step = step, use_wandb = True, guide_plot=True)
+            self.plot(env = env, trajectory = trajectory, save_dir = save_dir, step = step, use_wandb = self.use_wandb, guide_plot=True)
             self.actor_target.load_state_dict(self.actor.state_dict())
             self.initialize_extend_skill(self.guide_skill)
             self.update_D_delta_target(D_delta_all)
@@ -395,7 +395,7 @@ class DISCOAgent(SACAgent):
             self.extended_step = step
             self.guide_skill, trajectory = self.find_guide(env, step)
             save_dir = self.save_dir + '/guide_{}.png'.format(step)
-            self.plot(env = env, trajectory = trajectory, save_dir = save_dir, step = step, use_wandb = True, guide_plot=True)
+            self.plot(env = env, trajectory = trajectory, save_dir = save_dir, step = step, use_wandb = self.use_wandb, guide_plot=True)
             self.actor_target.load_state_dict(self.actor.state_dict())
             self.initialize_extend_skill(self.guide_skill)
             self.update_D_delta_target(D_delta_all)
